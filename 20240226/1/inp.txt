@@ -1,0 +1,9 @@
+up
+left
+down
+addmon 1 2 yay
+right
+right
+addmon 1 2 jkl
+down
+down
