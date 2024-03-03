@@ -62,17 +62,17 @@ while True:
                 encounter(*coords)
         case 'addmon':
             try:
-                command[1] = int(command[1])
+                command[3] = int(command[1])
                 command[2] = int(command[2])
             except:
                 print('Invalid arguments')
                 continue
-            if command[1] < 0 or command[1] > 9 or command[2] < 0 or command[2] > 9: print('Invalid arguments')
+            if command[3] < 0 or command[3] > 9 or command[2] < 0 or command[2] > 9 or len(command) != 5 or command[1] not in cowsay.list_cows(): print('Invalid arguments')
             else:
                 existed = False
-                if (command[1], command[2]) in monsters.keys(): existed = True
-                monsters[(command[1], command[2])] = command[3]
-                print('Added monster to', str((command[1], command[2])), 'saying', command[3])
+                if (command[2], command[3]) in monsters.keys(): existed = True
+                monsters[(command[2], command[3])] = command[4]
+                print('Added monster', command[1], 'to', str((command[2], command[3])), 'saying', command[4])
                 if existed: print('Replaced the old monster')
         case _:
             print('Invalid command')
