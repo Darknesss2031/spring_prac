@@ -66,6 +66,7 @@ while True:
                 command[2] = int(command[2])
             except:
                 print('Invalid arguments')
+                continue
             if command[1] < 0 or command[1] > 9 or command[2] < 0 or command[2] > 9: print('Invalid arguments')
             else:
                 existed = False
@@ -73,6 +74,9 @@ while True:
                 monsters[(command[1], command[2])] = command[3]
                 print('Added monster to', str((command[1], command[2])), 'saying', command[3])
                 if existed: print('Replaced the old monster')
+        case _:
+            print('Invalid command')
+
 
 
 
