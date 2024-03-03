@@ -23,7 +23,7 @@ class Player:
 
 monsters = {}
 def encounter(x, y):
-    print(cowsay.cowsay(monsters[(x, y)]))
+    print(cowsay.cowsay(*monsters[(x, y)]))
 
 player = Player(0, 0)
 
@@ -71,7 +71,7 @@ while True:
             else:
                 existed = False
                 if (command[2], command[3]) in monsters.keys(): existed = True
-                monsters[(command[2], command[3])] = command[4]
+                monsters[(command[2], command[3])] = (command[4], command[1])
                 print('Added monster', command[1], 'to', str((command[2], command[3])), 'saying', command[4])
                 if existed: print('Replaced the old monster')
         case _:
