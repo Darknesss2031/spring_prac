@@ -40,6 +40,11 @@ $the_cow = <<EOC;
          (((""`  `"")))
 EOC
 """))
+def encounter(x, y):
+    monster = monsters[(x, y)]
+    name = monster[0]
+    hello = monster[2]
+    print(cowsay.cowsay(hello, name))
 
 player = Player(0, 0)
 custom_cows = {}
@@ -51,6 +56,7 @@ def encounter(x, y):
     hello = monster[2]
     if name in custom_cows.keys():
         print(cowsay.cowsay(hello, cowfile=custom_cows[name]))
+        return
     print(cowsay.cowsay(hello, name))
 print("<<< Welcome to Python-MUD 0.1 >>>")
 
