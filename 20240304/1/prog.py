@@ -46,10 +46,12 @@ custom_cows = {}
 custom_cows['jgsbat'] = jgsbat
 
 def encounter(x, y):
-    if monsters[(x, y)][1] in custom_cows.keys():
-        print(cowsay.cowsay(monsters[(x, y)][0], cowfile=custom_cows[monsters[(x, y)][1]]))
-        return
-    print(cowsay.cowsay(*monsters[(x, y)]))
+    monster = monsters[(x, y)]
+    name = monster[0]
+    hello = monster[2]
+    if name in custom_cows.keys():
+        print(cowsay.cowsay(hello, cowfile=custom_cows[name]))
+    print(cowsay.cowsay(hello, name))
 print("<<< Welcome to Python-MUD 0.1 >>>")
 
 while True:
@@ -138,5 +140,17 @@ while True:
             if invalidArgs or 0 in popularity:
                 print('Invalid arguments')
                 continue
+            x = coords[0]
+            y = coords[1]
+
+            if x < 0 or x > 9 or y < 0 or y > 9 or len(command) != 9:
+                print('Invalid arguments')
+                continue
+
+            existed = False
+            if (x, y) in monsters.keys(): existed = True
+            monsters[(x, y)] = (name, hp, hello)
+            print('Added monster', name, 'with', hp, 'hp to', str((x, y)), 'saying', hello)
+            if existed: print('Replaced the old monster')
         case _:
             print('Invalid command')
