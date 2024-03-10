@@ -49,6 +49,7 @@ def encounter(x, y):
         print(cowsay.cowsay(monsters[(x, y)][0], cowfile=custom_cows[monsters[(x, y)][1]]))
         return
     print(cowsay.cowsay(*monsters[(x, y)]))
+print("<<< Welcome to Python-MUD 0.1 >>>")
 
 while True:
     inp = ''
