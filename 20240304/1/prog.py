@@ -24,7 +24,10 @@ class Player:
 
 monsters = {}
 def encounter(x, y):
-    print(cowsay.cowsay(*monsters[(x, y)]))
+    monster = monsters[(x, y)]
+    name = monster[0]
+    hello = monster[2]
+    print(cowsay.cowsay(hello, name))
 
 player = Player(0, 0)
 
@@ -115,18 +118,17 @@ while True:
                 print('Invalid arguments')
                 continue
 
-            # try:
-            #     command[3] = int(command[1])
-            #     command[2] = int(command[2])
-            # except:
-            #     print('Invalid arguments')
-            #     continue
-            # if command[3] < 0 or command[3] > 9 or command[2] < 0 or command[2] > 9 or len(command) != 5 or command[1] not in cowsay.list_cows(): print('Invalid arguments')
-            # else:
-            #     existed = False
-            #     if (command[2], command[3]) in monsters.keys(): existed = True
-            #     monsters[(command[2], command[3])] = (command[4], command[1])
-            #     print('Added monster', command[1], 'to', str((command[2], command[3])), 'saying', command[4])
-            #     if existed: print('Replaced the old monster')
+            x = coords[0]
+            y = coords[1]
+
+            if x < 0 or x > 9 or y < 0 or y > 9 or len(command) != 9:
+                print('Invalid arguments')
+                continue
+
+            existed = False
+            if (x, y) in monsters.keys(): existed = True
+            monsters[(x, y)] = (name, hp, hello)
+            print('Added monster', name, 'with', hp, 'hp to', str((x, y)), 'saying', hello)
+            if existed: print('Replaced the old monster')
         case _:
             print('Invalid command')
