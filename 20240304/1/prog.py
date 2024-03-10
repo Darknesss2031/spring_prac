@@ -1,5 +1,6 @@
 import cowsay
 import sys
+import shlex
 
 # class Monster:
 #     def __init__(self, x, y, greet):
@@ -34,7 +35,7 @@ while True:
     except: pass
     if not inp: break
 
-    command = inp.split()
+    command = shlex.split(inp)
     match command[0]:
         case 'up':
             player.up()
@@ -61,18 +62,71 @@ while True:
             if coords in monsters.keys():
                 encounter(*coords)
         case 'addmon':
+
             try:
-                command[3] = int(command[1])
-                command[2] = int(command[2])
+                name = command[1]
             except:
                 print('Invalid arguments')
                 continue
-            if command[3] < 0 or command[3] > 9 or command[2] < 0 or command[2] > 9 or len(command) != 5 or command[1] not in cowsay.list_cows(): print('Invalid arguments')
-            else:
-                existed = False
-                if (command[2], command[3]) in monsters.keys(): existed = True
-                monsters[(command[2], command[3])] = (command[4], command[1])
-                print('Added monster', command[1], 'to', str((command[2], command[3])), 'saying', command[4])
-                if existed: print('Replaced the old monster')
+
+            if name not in cowsay.list_cows():
+                print('Invalid arguments')
+                continue
+
+            point = 2
+            hp = 0
+            hello = ''
+            coords = [0, 0]
+            popularity = [0] * 3
+            invalidArgs = False
+
+            if 'hello' not in command or 'hp' not in command or 'coords' not in command:
+                print('Invalid arguments')
+                continue
+
+            while point < len(command):
+                if command[point] == 'hp':
+                    popularity[0] += 1
+                    point += 1
+                    try:
+                        hp = int(command[point])
+                    except:
+                        invalidArgs = True
+                        break
+                elif command[point] == 'hello':
+                    popularity[1] += 1
+                    point += 1
+                    try:
+                        hello = command[point]
+                    except:
+                        invalidArgs = True
+                        break
+                elif command[point] == 'coords':
+                    popularity[2] += 1
+                    point += 1
+                    try:
+                        coords = [int(command[point]), int(command[point + 1])]
+                    except:
+                        invalidArgs = True
+                        break
+                    point += 1
+                point += 1
+            if invalidArgs or 0 in popularity:
+                print('Invalid arguments')
+                continue
+
+            # try:
+            #     command[3] = int(command[1])
+            #     command[2] = int(command[2])
+            # except:
+            #     print('Invalid arguments')
+            #     continue
+            # if command[3] < 0 or command[3] > 9 or command[2] < 0 or command[2] > 9 or len(command) != 5 or command[1] not in cowsay.list_cows(): print('Invalid arguments')
+            # else:
+            #     existed = False
+            #     if (command[2], command[3]) in monsters.keys(): existed = True
+            #     monsters[(command[2], command[3])] = (command[4], command[1])
+            #     print('Added monster', command[1], 'to', str((command[2], command[3])), 'saying', command[4])
+            #     if existed: print('Replaced the old monster')
         case _:
             print('Invalid command')
