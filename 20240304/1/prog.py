@@ -101,7 +101,7 @@ while True:
                 print('Invalid arguments')
                 continue
 
-            if name not in cowsay.list_cows():
+            if name not in cowsay.list_cows() and name not in custom_cows.keys():
                 print('Invalid arguments')
                 continue
 
