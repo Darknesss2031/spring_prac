@@ -3,6 +3,7 @@ import cowsay
 from io import StringIO
 import shlex
 
+
 class Monster:
     def __init__(self, name, hp, greet):
         self.name = name
@@ -16,7 +17,6 @@ class Monster:
 
 
 class Player:
-
     weapons = {
         'sword': 10,
         'spear': 15,
@@ -28,8 +28,11 @@ class Player:
         self.y = y
 
     def up(self): self.y = (self.y - 1) % 10
+
     def down(self): self.y = (self.y + 1) % 10
+
     def left(self): self.x = (self.x - 1) % 10
+
     def right(self): self.x = (self.x + 1) % 10
 
     def getPos(self): return (self.x, self.y)
@@ -58,6 +61,7 @@ custom_cows['jgsbat'] = jgsbat
 
 player = Player(0, 0)
 
+
 def encounter(x, y):
     monster = monsters[(x, y)]
     name = monster.name
@@ -67,7 +71,9 @@ def encounter(x, y):
         return
     print(cowsay.cowsay(hello, name))
 
+
 print("<<< Welcome to Python-MUD 0.1 >>>")
+
 
 class cmdLine(cmd.Cmd):
     prompt = '> '
@@ -192,6 +198,14 @@ class cmdLine(cmd.Cmd):
         else:
             print(monsters[coords].name, 'died')
             monsters.pop(coords)
+
+    def complete_attack(self, text, line, begidx, endidx):
+        if len(shlex.split(line)) == 1:
+            return ['with']
+        elif len(shlex.split(line)) == 2 and 'with'.startswith(text) and text:
+            return ['with']
+        elif len(shlex.split(line)) == 2 and not 'with'.startswith(text): return []
+        return [c for c in player.weapons.keys() if c.startswith(text)]
 
 
 if __name__ == "__main__":
