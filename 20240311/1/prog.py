@@ -192,6 +192,11 @@ class cmdLine(cmd.Cmd):
             print(monsters[coords].name, 'died')
             monsters.pop(coords)
 
+    def complete_attack(self, text, line, begidx, endidx):
+        if len(shlex.split(line)) == 1: return available_cows
+        elif len(shlex.split(line)) == 2: return [c for c in available_cows if c.startswith(text)]
+        return []
+
 
 if __name__ == "__main__":
     cmdLine().cmdloop()
