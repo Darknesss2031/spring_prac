@@ -10,8 +10,9 @@ class Monster:
         self.hello = greet
 
     def attackFor(self, damage):
+        givenDamage = min(damage, self.hp)
         self.hp = max(0, self.hp - damage)
-        return self.hp
+        return self.hp, givenDamage
 
 
 class Player:
@@ -157,6 +158,22 @@ class cmdLine(cmd.Cmd):
         monsters[(x, y)] = Monster(name, hp, hello)
         print('Added monster', name, 'with', hp, 'hp to', str((x, y)), 'saying', hello)
         if existed: print('Replaced the old monster')
+
+    def do_attack(self, _):
+        coords = player.getPos()
+        damage = 10
+        if coords not in monsters.keys():
+            print("No monster here")
+            return
+
+        hp, givenDamage = monsters[coords].attackFor(damage)
+        print(f"Attacked {monsters[coords].name}, damage {givenDamage} hp")
+
+        if hp:
+            print(f"{monsters[coords].name} now has {hp} hp")
+        else:
+            print(monsters[coords].name, 'died')
+            monsters.pop(coords)
 
 if __name__ == "__main__":
     cmdLine().cmdloop()
