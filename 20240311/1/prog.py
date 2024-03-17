@@ -16,6 +16,13 @@ class Monster:
 
 
 class Player:
+
+    weapons = {
+        'sword': 10,
+        'spear': 15,
+        'axe': 20
+    }
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -159,12 +166,23 @@ class cmdLine(cmd.Cmd):
         print('Added monster', name, 'with', hp, 'hp to', str((x, y)), 'saying', hello)
         if existed: print('Replaced the old monster')
 
-    def do_attack(self, _):
+    def do_attack(self, params):
         coords = player.getPos()
-        damage = 10
+        weapon = 'sword'
+
         if coords not in monsters.keys():
             print("No monster here")
             return
+
+        args = shlex.split(params)
+
+        if len(args) and args[0] == 'with':
+            if len(args) < 2 or args[1] not in player.weapons.keys():
+                print("Unknown weapon")
+                return
+            weapon = args[1]
+
+        damage = player.weapons[weapon]
 
         hp, givenDamage = monsters[coords].attackFor(damage)
         print(f"Attacked {monsters[coords].name}, damage {givenDamage} hp")
@@ -174,6 +192,7 @@ class cmdLine(cmd.Cmd):
         else:
             print(monsters[coords].name, 'died')
             monsters.pop(coords)
+
 
 if __name__ == "__main__":
     cmdLine().cmdloop()
