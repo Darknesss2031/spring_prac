@@ -3,6 +3,7 @@ import cowsay
 from io import StringIO
 import shlex
 
+
 class Monster:
     def __init__(self, name, hp, greet):
         self.name = name
@@ -21,8 +22,11 @@ class Player:
         self.y = y
 
     def up(self): self.y = (self.y - 1) % 10
+
     def down(self): self.y = (self.y + 1) % 10
+
     def left(self): self.x = (self.x - 1) % 10
+
     def right(self): self.x = (self.x + 1) % 10
 
     def getPos(self): return (self.x, self.y)
@@ -49,7 +53,10 @@ EOC
 custom_cows = {}
 custom_cows['jgsbat'] = jgsbat
 
+available_cows = cowsay.list_cows() + list(custom_cows.keys())
+
 player = Player(0, 0)
+
 
 def encounter(x, y):
     monster = monsters[(x, y)]
@@ -60,7 +67,9 @@ def encounter(x, y):
         return
     print(cowsay.cowsay(hello, name))
 
+
 print("<<< Welcome to Python-MUD 0.1 >>>")
+
 
 class cmdLine(cmd.Cmd):
     prompt = '> '
@@ -159,11 +168,19 @@ class cmdLine(cmd.Cmd):
         print('Added monster', name, 'with', hp, 'hp to', str((x, y)), 'saying', hello)
         if existed: print('Replaced the old monster')
 
-    def do_attack(self, _):
+    def do_attack(self, params):
         coords = player.getPos()
         damage = 10
-        if coords not in monsters.keys():
-            print("No monster here")
+
+        args = shlex.split(params)
+        if len(args) < 1 or args[0] not in available_cows:
+            print("Invalid monster name")
+            return
+
+        name = args[0]
+
+        if coords not in monsters.keys() or monsters[coords].name != name:
+            print(f"No {name} here")
             return
 
         hp, givenDamage = monsters[coords].attackFor(damage)
@@ -174,6 +191,7 @@ class cmdLine(cmd.Cmd):
         else:
             print(monsters[coords].name, 'died')
             monsters.pop(coords)
+
 
 if __name__ == "__main__":
     cmdLine().cmdloop()
