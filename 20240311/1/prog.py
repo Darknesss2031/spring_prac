@@ -59,6 +59,8 @@ EOC
 custom_cows = {}
 custom_cows['jgsbat'] = jgsbat
 
+available_cows = cowsay.list_cows() + list(custom_cows.keys())
+
 player = Player(0, 0)
 
 
@@ -176,17 +178,23 @@ class cmdLine(cmd.Cmd):
         coords = player.getPos()
         weapon = 'sword'
 
-        if coords not in monsters.keys():
-            print("No monster here")
-            return
-
         args = shlex.split(params)
 
-        if len(args) and args[0] == 'with':
-            if len(args) < 2 or args[1] not in player.weapons.keys():
+        if len(args) < 1 or args[0] not in available_cows:
+            print("Invalid monster name")
+            return
+
+        name = args[0]
+
+        if coords not in monsters.keys() or monsters[coords].name != name:
+            print(f"No {name} here")
+            return
+
+        if len(args) > 1 and args[1] == 'with':
+            if len(args) < 3 or args[2] not in player.weapons.keys():
                 print("Unknown weapon")
                 return
-            weapon = args[1]
+            weapon = args[2]
 
         damage = player.weapons[weapon]
 
@@ -200,12 +208,21 @@ class cmdLine(cmd.Cmd):
             monsters.pop(coords)
 
     def complete_attack(self, text, line, begidx, endidx):
-        if len(shlex.split(line)) == 1:
+        args = shlex.split(line)
+        if len(args) == 1:
+            return available_cows
+        if len(args) == 2 and args[1] not in available_cows:
+            return [c for c in available_cows if c.startswith(text)]
+        elif len(args) == 2 and line[line.find(args[1][0]):].count(' ') > 0:
             return ['with']
-        elif len(shlex.split(line)) == 2 and 'with'.startswith(text) and text:
+        elif len(args) == 3 and 'with'.startswith(text) and text:
             return ['with']
-        elif len(shlex.split(line)) == 2 and not 'with'.startswith(text): return []
-        return [c for c in player.weapons.keys() if c.startswith(text)]
+        elif len(args) == 3 and not 'with'.startswith(text): return []
+        elif len(args) == 3 and args[2] == 'with' and line[line.rfind('h'):].count(' ') > 0:
+            return [c for c in player.weapons.keys()]
+        elif len(args) == 4 and text:
+            return [c for c in player.weapons.keys() if c.startswith(text)]
+        return []
 
 
 if __name__ == "__main__":
